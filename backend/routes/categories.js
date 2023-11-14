@@ -2,6 +2,8 @@ const { Category } = require("../models/category");
 const express = require("express");
 const router = express.Router();
 
+// GET ALL CATEGORIES
+// /api/v1/categories
 router.get(`/`, async (req, res) => {
   const categoryList = await Category.find();
 
@@ -18,12 +20,13 @@ router.get(`/:id`, async (req, res) => {
     res
       .status(500)
       .json({ message: "The category with the given ID was not found." });
-
   }
 
   res.status(200).send(category);
-})
+});
 
+// POST CATEGORY
+// /api/v1/categories
 router.post(`/`, async (req, res) => {
   let category = new Category({
     name: req.body.name,
@@ -42,6 +45,8 @@ router.post(`/`, async (req, res) => {
   res.send(category);
 });
 
+// DELETE CATEGORY
+// /api/v1/categories/:id
 router.delete(`/:id`, async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
@@ -63,6 +68,8 @@ router.delete(`/:id`, async (req, res) => {
   }
 });
 
+// PATCH CATEGORY
+// /api/v1/categories/:id
 router.patch(`/:id`, async (req, res) => {
   try {
     const category = await Category.findByIdAndUpdate(
@@ -74,11 +81,11 @@ router.patch(`/:id`, async (req, res) => {
       },
       { new: true }
     );
-    if(category){
+    if (category) {
       return res
         .status(200)
         .json({ success: true, message: "the category is updated!" });
-    }else{
+    } else {
       return res
         .status(404)
         .json({ success: false, message: "category not found!" });
