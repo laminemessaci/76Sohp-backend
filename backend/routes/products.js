@@ -5,8 +5,13 @@ const { Category } = require("../models/category");
 const mongoose = require("mongoose");
 const router = express.Router();
 
+// GET ALL PRODUCTS
+// /api/v1/products
 router.get(`/`, async (req, res) => {
-  const productList = await Product.find();
+  const filter = req.query.categories
+    ? { category: req.query.categories.split(",") }
+    : {};
+  const productList = await Product.find({ ...filter }).populate("category");
 
   if (!productList) {
     res.status(500).json({ success: false });
@@ -26,6 +31,8 @@ router.get(`/:id`, async (req, res) => {
   res.status(200).send(product);
 });
 
+// POST PRODUCT
+// /api/v1/products
 router.patch(`/:id`, async (req, res) => {
   if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).send("Invalid Product Id");
@@ -62,6 +69,8 @@ router.patch(`/:id`, async (req, res) => {
   res.status(201).send(product);
 });
 
+// CREATE PRODUCT
+// /api/v1/products
 router.post(`/`, async (req, res) => {
   const category = await Category.findById(req.body.category).exec();
   if (!category) return res.status(400).send("Invalid Category");
@@ -87,6 +96,8 @@ router.post(`/`, async (req, res) => {
   res.status(201).send(product);
 });
 
+// DELETE PRODUCT
+// /api/v1/products/:id
 router.delete(`/products/:productId`, (req, res) => {
   Product.findByIdAndRemove(req.params.id)
     .then((product) => {
@@ -105,6 +116,8 @@ router.delete(`/products/:productId`, (req, res) => {
     });
 });
 
+// GET COUNT OF PRODUCTS
+// /api/v1/products/get/count
 router.get(`/get/count`, async (req, res) => {
   const productCount = await Product.countDocuments();
 
@@ -116,6 +129,8 @@ router.get(`/get/count`, async (req, res) => {
   });
 });
 
+// GET FEATURED PRODUCTS
+// /api/v1/products/get/featured/:count
 router.get(`/get/featured/:count`, async (req, res) => {
   const count = req.params.count ? req.params.count : 0;
   const products = await Product.find({ isFeatured: true }).limit(+count);
@@ -127,6 +142,8 @@ router.get(`/get/featured/:count`, async (req, res) => {
   res.send(products);
 });
 
+// GET ALL PRODUCTS
+// /api/v1/products/get/featured
 router.get(`/get/featured`, async (req, res) => {
   const products = await Product.find({ isFeatured: true });
 
