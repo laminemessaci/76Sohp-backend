@@ -1,12 +1,16 @@
 const express = require("express");
+require("dotenv").config();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const colors = require("colors");
 
+const authJwt = require("./middlewares/jwt.js");
+const errorHandler = require("./middlewares/errorHandler.js");
+
 const app = express();
 
-require("dotenv").config();
+const api = process.env.API_URL;
 
 app.use(cors());
 app.options("*", cors());
@@ -14,14 +18,14 @@ app.options("*", cors());
 //middleware
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(authJwt);
+app.use(errorHandler);
 
 //Routes
 const categoriesRoutes = require("./routes/categories");
 const productsRoutes = require("./routes/products");
 const usersRoutes = require("./routes/users");
 const ordersRoutes = require("./routes/orders");
-
-const api = process.env.API_URL;
 
 app.use(`${api}/categories`, categoriesRoutes);
 
