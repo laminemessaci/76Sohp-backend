@@ -4,6 +4,8 @@ const router = express.Router();
 const colors = require("colors");
 const { OrderItem } = require("../models/orderItem");
 
+// GET ALL ORDERS
+// /api/v1/orders
 router.get(`/`, async (req, res) => {
   const orderList = await Order.find().populate("user", "name").sort({
     dateOrdered: -1,
@@ -32,6 +34,8 @@ router.get(`/:id`, async (req, res) => {
   res.status(200).send(order);
 });
 
+// POST ORDER
+// /api/v1/orders
 router.post(`/`, async (req, res) => {
   // console.log(colors.green(req.body.orderItems));
   const orderItemsIds = Promise.all(
@@ -91,6 +95,8 @@ router.post(`/`, async (req, res) => {
     });
 });
 
+// PATCH ORDER
+// /api/v1/orders
 router.patch(`/:id`, async (req, res) => {
   const order = await Order.findByIdAndUpdate(
     req.params.id,
@@ -130,6 +136,8 @@ router.delete(`/:id`, async (req, res) => {
   }
 });
 
+// GET ORDER COUNT
+// /api/v1/orders/get/count
 router.get(`/get/count`, async (req, res) => {
   const orderCount = await Order.countDocuments();
 
@@ -141,6 +149,8 @@ router.get(`/get/count`, async (req, res) => {
   });
 });
 
+// GET USER ORDERS
+// /api/v1/orders/get/userorders/:userid
 router.get(`/get/userorders/:userid`, async (req, res) => {
   const userOrderList = await Order.find({ user: req.params.userid })
     .populate({
