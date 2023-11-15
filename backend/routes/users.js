@@ -17,7 +17,7 @@ router.get(`/`, async (req, res) => {
 
 // POST USER
 // /api/v1/users
-router.post(`/`, async (req, res) => {
+router.post(`/register`, async (req, res) => {
   let findUser = await User.findOne({ email: req.body.email });
   if (findUser) return res.status(400).send("User already registered.");
 
@@ -137,6 +137,19 @@ router.post("/login", async (req, res) => {
   ) {
     return res.status(400).send({ message: "Password or email is incorrect." });
   }
+});
+
+// GET USER COUNT
+// /api/v1/users/get/count
+router.get(`/get/count`, async (req, res) => {
+  const userCount = await User.countDocuments();
+
+  if (!userCount) {
+    res.status(500).json({ success: false });
+  }
+  res.send({
+    userCount: userCount,
+  });
 });
 
 module.exports = router;
