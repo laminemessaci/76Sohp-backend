@@ -9,7 +9,7 @@ const colors = require("colors");
  * @return {undefined} This function does not return anything.
  */
 const errorHandler = (err, req, res, next) => {
-  console.log(colors.bgYellow(err.inner));
+  console.log(colors.bgYellow(err));
   if (res.headersSent || err.name === "ValidationError") {
     return next(err);
   }
