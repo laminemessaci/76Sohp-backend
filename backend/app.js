@@ -5,10 +5,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const colors = require("colors");
 
+
+
 const authJwt = require("./middlewares/jwt.js");
 const errorHandler = require("./middlewares/errorHandler.js");
-
 const app = express();
+
+
 
 const api = process.env.API_URL;
 
