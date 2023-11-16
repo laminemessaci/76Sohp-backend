@@ -5,13 +5,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const colors = require("colors");
 
-
-
 const authJwt = require("./middlewares/jwt.js");
 const errorHandler = require("./middlewares/errorHandler.js");
 const app = express();
-
-
 
 const api = process.env.API_URL;
 
@@ -22,6 +18,7 @@ app.options("*", cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authJwt);
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 app.use(errorHandler);
 
 //Routes
